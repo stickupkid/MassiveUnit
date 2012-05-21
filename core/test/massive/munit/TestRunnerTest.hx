@@ -89,7 +89,7 @@ class TestRunnerTest
     {
         Assert.isFalse(isSuccessful);
         Assert.areEqual(2, client.testCount);
-        Assert.areEqual(2, client.finalTestCount);
+        Assert.areEqual(3, client.finalTestCount);
         Assert.areEqual(1, client.passCount);
         Assert.areEqual(1, client.finalPassCount);
         Assert.areEqual(1, client.failCount);

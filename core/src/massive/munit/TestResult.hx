@@ -81,6 +81,11 @@ class TestResult
     public var ignore:Bool;
 	
 	/**
+	 * Whether the test expects to throw an error or not.
+	 */
+	public var expects:Bool;
+	
+	/**
 	 * If this test failed, the assertion exception that was captured.
 	 */
 	public var failure:AssertionException;
@@ -103,6 +108,7 @@ class TestResult
 		description = "";
 		async = false;
 		ignore = false;
+		expects = false;
 		error = null;
 		failure = null;
 	}

@@ -284,7 +284,7 @@ class TestRunner implements IAsyncDelegateObserver
                 testCount++; // note we don't include ignored in final test count
                 Reflect.callMethod(activeHelper.test, activeHelper.before, emptyParams);
                 testStartTime = Timer.stamp();
-                executeTestCase(testCaseData, testCaseData.result.async);
+                executeTestCase(testCaseData, testCaseData.result.async, testCaseData.result.expects);
 
                 if (!asyncPending)
                     Reflect.callMethod(activeHelper.test, activeHelper.after, emptyParams);
@@ -294,7 +294,7 @@ class TestRunner implements IAsyncDelegateObserver
         }
     }
 
-    private function executeTestCase(testCaseData:Dynamic, async:Bool):Void
+    private function executeTestCase(testCaseData:Dynamic, async:Bool, expects:Bool):Void
     {
         var result:TestResult = testCaseData.result;
         try
@@ -329,29 +329,33 @@ class TestRunner implements IAsyncDelegateObserver
                 asyncDelegate.cancelTest();
                 asyncDelegate = null;
             }
-            if (Std.is(e, org.hamcrest.AssertionException))
+			
+			// If we're expecting a item to be thrown then just ignore the error here.
+			if(!(expects && Type.getClass(e) != null && Type.getClassName(Type.getClass(e)) == result.description)) 
+			{
+				if (Std.is(e, org.hamcrest.AssertionException))
                 e = new AssertionException(e.message, e.info);
 
-            if (Std.is(e, AssertionException))
-            {
-                result.executionTime = Timer.stamp() - testStartTime;
-                result.failure = e;
-                failCount++;
-                for (c in clients)
-                    c.addFail(result);
-            }
-            else
-            {
-                result.executionTime = Timer.stamp() - testStartTime;
-                if (!Std.is(e, MUnitException))
-                    e = new UnhandledException(e, result.location);
-
-                result.error = e;
-                errorCount++;
-                for (c in clients)
-                    c.addError(result);
-            }
-
+	            if (Std.is(e, AssertionException))
+	            {
+	                result.executionTime = Timer.stamp() - testStartTime;
+	                result.failure = e;
+	                failCount++;
+	                for (c in clients)
+	                    c.addFail(result);
+	            }
+	            else
+	            {
+	                result.executionTime = Timer.stamp() - testStartTime;
+	                if (!Std.is(e, MUnitException))
+	                    e = new UnhandledException(e, result.location);
+	
+	                result.error = e;
+	                errorCount++;
+	                for (c in clients)
+	                    c.addError(result);
+	            }
+			}
         }
     }
 
@@ -383,7 +387,7 @@ class TestRunner implements IAsyncDelegateObserver
 
         asyncPending = false;
         asyncDelegate = null;
-        executeTestCase(testCaseData, false);
+        executeTestCase(testCaseData, false, false);
         Reflect.callMethod(activeHelper.test, activeHelper.after, emptyParams);
         execute();
     }

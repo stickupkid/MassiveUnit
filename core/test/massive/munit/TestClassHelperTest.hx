@@ -71,6 +71,11 @@ class TestClassHelperTest
 		
 		Assert.isTrue(helper.current().result.async);
 		Assert.areEqual(helper.test, helper.current().scope);
+		
+		Assert.areEqual(helper.test.exampleTestWithExpects, helper.next().test);
+		Assert.areEqual(helper.test.exampleTestWithExpects, helper.current().test);
+		
+		Assert.isTrue(helper.current().result.expects);
 
 		Assert.isFalse(helper.hasNext());
 		Assert.isNull(helper.next());
@@ -96,6 +101,11 @@ class TestClassHelperTest
 		
 		Assert.isFalse(helper.current().result.async);
 		Assert.areEqual(helper.test, helper.current().scope);
+		
+		Assert.areEqual(helper.test.exampleTestWithExpectsAsDebug, helper.next().test);
+		Assert.areEqual(helper.test.exampleTestWithExpectsAsDebug, helper.current().test);
+		
+		Assert.isTrue(helper.current().result.expects);
 
 		Assert.isFalse(helper.hasNext());
 		Assert.isNull(helper.next());

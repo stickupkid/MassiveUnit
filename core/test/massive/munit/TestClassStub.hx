@@ -28,6 +28,7 @@
 package massive.munit;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
+import massive.munit.AssertionException;
 
 /**
  * ...
@@ -82,5 +83,19 @@ class TestClassStub
 	public function exampleTestThree():Void
 	{
 		Assert.isTrue(true);
+	}
+	
+	@Test
+	@Expects("massive.munit.AssertionException")
+	public function exampleTestWithExpects():Void
+	{
+		throw new massive.munit.AssertionException("Expects");
+	}
+	
+	@TestDebug
+	@Expects("massive.munit.AssertionException")
+	public function exampleTestWithExpectsAsDebug():Void
+	{
+		throw new massive.munit.AssertionException("Expects");
 	}
 }

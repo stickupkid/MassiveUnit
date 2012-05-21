@@ -32,3 +32,9 @@ report/
 example/.mcover-debug
 tool/.mcover-debug
 core/.mcover-debug
+
+# IDE generated files #
+#######################
+.hxtypes
+.settings
+.project

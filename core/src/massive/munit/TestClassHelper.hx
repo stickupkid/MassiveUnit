@@ -76,6 +76,11 @@ class TestClassHelper
 	public inline static var META_TAG_ASYNC_TEST:String = "AsyncTest";
 	
 	/**
+     * Meta tag marking test that expect a error to be thrown.
+     */
+	public inline static var META_TAG_EXPECTS:String = "Expects";
+	
+	/**
      * Meta tag marking a test method to ignore.
      */
     public inline static var META_TAG_IGNORE:String = "Ignore";
@@ -101,6 +106,7 @@ class TestClassHelper
 									META_TAG_AFTER,
 									META_TAG_TEST,
 									META_TAG_ASYNC_TEST,
+									META_TAG_EXPECTS,
 									META_TAG_TEST_DEBUG];
 
 	/**
@@ -230,7 +236,7 @@ class TestClassHelper
 					var tagsCopy = {};
 					for (tagName in newTagNames)
 						Reflect.setField(tagsCopy, tagName, Reflect.field(newFieldTags, tagName));
-						
+					
 					Reflect.setField(meta, fieldName, tagsCopy);
 				}
 				else
@@ -282,7 +288,8 @@ class TestClassHelper
 				var description = (args != null) ? args[0] : "";
 				var isAsync = (args != null && description == META_PARAM_ASYNC_TEST); // deprecated support for @Test("Async")
 				var isIgnored = Reflect.hasField(funcMeta, META_TAG_IGNORE);
-				
+				var hasExpects = Reflect.hasField(funcMeta, META_TAG_EXPECTS);
+							
 				if (isAsync) 
 				{
 					description = "";
@@ -290,6 +297,11 @@ class TestClassHelper
 				else if (isIgnored)
 				{
 					args = Reflect.field(funcMeta, META_TAG_IGNORE);
+					description = (args != null) ? args[0] : "";
+				}
+				else if (hasExpects)
+				{
+					args = Reflect.field(funcMeta, META_TAG_EXPECTS);
 					description = (args != null) ? args[0] : "";
 				}
 				
@@ -305,13 +317,13 @@ class TestClassHelper
 						after = func;
 					case META_TAG_ASYNC_TEST:
 						if (!isDebug)
-							addTest(fieldName, func, test, true, isIgnored, description);
+							addTest(fieldName, func, test, true, isIgnored, false, description);
 					case META_TAG_TEST:
 						if (!isDebug)
-							addTest(fieldName, func, test, isAsync, isIgnored, description);
+							addTest(fieldName, func, test, isAsync, isIgnored, hasExpects, description);
 					case META_TAG_TEST_DEBUG:
 						if (isDebug)
-							addTest(fieldName, func, test, isAsync, isIgnored, description);
+							addTest(fieldName, func, test, isAsync, isIgnored, hasExpects, description);
 				}
 			}
 		}
@@ -322,11 +334,13 @@ class TestClassHelper
 							testInstance:Dynamic, 
 							isAsync:Bool, 
 							isIgnored:Bool, 
+							hasExpects:Bool,
 							description:String):Void
 	{
 		var result:TestResult = new TestResult();
 		result.async = isAsync;
 		result.ignore = isIgnored;
+		result.expects = hasExpects;
 		result.className = className;
 		result.description = description;
 		result.name = field;
