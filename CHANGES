@@ -1,3 +1,69 @@
+v0.9.5.2.2 - 21.08.12
+- TestCommand prints stderr even if exit code is 0 from haxe compiler
+
+v0.9.5.2.1 - 21.08.12
+- reverted '#if mcover' to '#if MCOVER' in template
+
+v0.9.5.2 - 21.08.12
+- added forced update to testmain to use coverage
+- added clearer CLI warning if TestMain uses outdated mcover references
+- update TestMain template to use '#if mcover' rather than '#if MCOVER' (still checks for both for backwards compatibility)
+
+v0.9.5.1 - 20.08.12
+- neko/cpp: Added catch for when process throws exception before process.exitCode()
+- cpp: Remove executable before re-compiling
+- cpp: Added CLI support for cpp TestMain-debug executables
+- cli: Added Target.executableFile for targets that output a directory
+- all: updated integration with mcover 1.4.0
+
+v0.9.5.0 - 19.08.12
+- new : added cpp support (beta - hxcpp 2.09 only)
+- all : updated internals of test/run/report commands
+- all : removed optional params from ICoverageTestResultClient due to incompatibility with hxcpp209
+- all : updated examples to include cpp target
+- neko : updated references to use Sys rather than neko.Sys
+- all : run command only copies compiled target files from bin directory to test-runner (ignores other directories and files)
+- cpp: compile coverage and non-coverage versions of cpp target to different directories (appends '-coverage' to cpp output dir) to prevent full recompile when switching between the two
+- all: merged pull request #38 from tynril - adding custom coverage include/ignored packages to munit config 
+
+v0.9.4.3 - 17.08.12
+- all: Fixed issue #36 - trace statements no longer appear in print client output
+- removed haxe.trace redirect from AbstractTestResultClient, now only in concrete instances
+- traces now logged to static array to prevent dropped traces when print clients compose other print clients
+
+v0.9.4.2 - 23.07.12
+- all: Fixed Issue #35 - TestMain template uses incorrect coverage package
+
+v0.9.4.1 - 14.07.12
+- flash: Fixed issue #32 - icons don't always appear in result client for AS3 
+- flash, js : moved html print client icons into single spritesheet
+- flash, js : cleaned up js and css on html print client (and html templates)
+- flash : Fixed issue #29 detect debug flash player for as3 targets and print warning if not available
+- flash : UnhandledException only generates native flash stack trace if Capabilities.isDebugger is true
+- flash : Fixed issue #27 - Use name of swf file in hxml
+- all : changed how target files are located in RunCommand (TestCommadn generates temp files containing target file locations )
+
+v0.9.4.0 - 02.07.12
+- added report command
+- added ReportFormatter and TeamCityReportFormatter
+
+v0.9.3.3 - 29.06.12
+- fixed '-debug' option not being detected correctly
+- fixed occassional issue on Windows with line return encoding in hxml file.
+- changed icon for code coverage
+
+v0.9.3.2 - 22.06.12
+- Bug fix: AsyncTest with successful sync asserts causing runner to execute out of order.
+
+v0.9.3.1
+- hotfix for 9.3.0
+
+v0.9.3.0 - 25.05.12
+- Improved CI support
+- Added -result-exit-code option for exiting if tests on one or more platforms fail.
+- Added simple SummaryReportClient to en in the testable results back to command line without incurring HTTP POST bugs in nekotools server.
+- Re-enabled http result clients for examples
+
 v0.9.2.6 - 23.05.12
 - added example for junit report functionality
 - enabled permature exitcode (1) if either the neko test app or the browser returns exit code > 0
